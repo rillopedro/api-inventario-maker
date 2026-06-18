@@ -9,7 +9,8 @@ class ComponenteSchema(BaseModel):
  nome: str = Field(..., min_length=2, description="Nome do componente maker")
  quantidade: int = Field(..., ge=0, description="Quantidade em estoque (deve ser maior ou igual a zero)")
  categoria: str = Field(..., description="Categoria do item (ex: Atuadores, Microcontroladores)")
- 
+ estado_conservação: str = Field(..., description="Estado de conservação do item (ex: Novo, Usado)")
+
 # 3. Nosso "Banco de Dados" temporário em memória
 estoque_laboratorio = [
  {"id": 1, "nome": "Arduino Sensor Shield", "quantidade": 15, "categoria": "Placas de Expansão"},
@@ -50,11 +51,13 @@ componente_dict}
 # CRUD - UPDATE (Atualizar quantidade ou dados)
 @app.put("/componentes/{componente_id}")
 def atualizar_componente(componente_id: int, dados_atualizados: ComponenteSchema):
- for item in estoque_laboratorio:
+ for item in estoque_laboratorio:   
     if item["id"] == componente_id:
         item["nome"] = dados_atualizados.nome
         item["quantidade"] = dados_atualizados.quantidade
         item["categoria"] = dados_atualizados.categoria
+        item["estado_conservação"] = dados_atualizados.estado_conservação
+
     return {"mensagem": "Componente atualizado com sucesso!", "componente":
     item}
 
